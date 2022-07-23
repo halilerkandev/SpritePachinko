@@ -9,7 +9,6 @@ public class Eat : MonoBehaviour
 {
     private AudioSource audioSource;
     public GameObject coin;
-    private bool isCoroutineExecuting = false;
 
     // Start is called before the first frame update
     void Start()
@@ -26,26 +25,15 @@ public class Eat : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Pizza")) {
-            GameObject currentCoin = Instantiate(
+            Instantiate(
                 coin,
-                new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z),
-                new Quaternion());
-            StartCoroutine(ExecuteAfterTime(0.5f, () =>
-            {
-                Destroy(currentCoin);
-            }));
+                new Vector3(
+                    transform.position.x,
+                    transform.position.y + 1f,
+                    transform.position.z),
+                transform.rotation);
             audioSource.Play();
             Destroy(collision.gameObject);
         }
-    }
-
-    IEnumerator ExecuteAfterTime(float time, Action task)
-    {
-        if (isCoroutineExecuting)
-            yield break;
-        isCoroutineExecuting = true;
-        yield return new WaitForSeconds(time);
-        task();
-        isCoroutineExecuting = false;
     }
 }
